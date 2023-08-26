@@ -229,5 +229,16 @@ router.delete('/delete/:id', async (req, res) => {
     });
   });
 
+
+  router.get('/check-auth', (req, res) => {
+    if (req.session.userId) {
+      // If userId exists in session, user is authenticated
+      res.status(200).json({ isAuthenticated: true });
+    } else {
+      res.status(200).json({ isAuthenticated: false });
+    }
+  });
+
+
   module.exports = router;
   
