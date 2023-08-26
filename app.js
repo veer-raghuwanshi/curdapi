@@ -20,7 +20,7 @@ app.use(
 let cors = require("cors");
 // app.use(cors());
 app.use(cors({
-  // origin: 'http://localhost:3001',
+  origin: 'http://localhost:3001',
   credentials: true // Allow credentials
 }));
 app.use((req, res, next) => {
