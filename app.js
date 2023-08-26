@@ -1,10 +1,22 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const config = require('./config');
 const authRoutes = require('./routes/auth');
 
 const app = express();
+app.use(
+  session({
+    secret: config.secretKey,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Adjust this based on your requirements
+  })
+);
+
+
+
 let cors = require("cors");
 app.use(cors());
 app.use((req, res, next) => {

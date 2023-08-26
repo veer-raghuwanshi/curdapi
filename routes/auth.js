@@ -218,7 +218,16 @@ router.delete('/delete/:id', async (req, res) => {
     }
   });
   
-
+  router.post('/logout', (req, res) => {
+    req.session.destroy((error) => {
+      if (error) {
+        console.error('Error destroying session:', error);
+        return res.status(500).json({ message: 'An error occurred' });
+      }
+      res.clearCookie('connect.sid'); // Clear the session cookie
+      res.status(200).json({ message: 'Logout successful' });
+    });
+  });
 
   module.exports = router;
   
