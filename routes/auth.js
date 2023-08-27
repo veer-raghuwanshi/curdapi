@@ -89,8 +89,7 @@ router.post('/register', async (req, res) => {
   
   
 
-  const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+ 
 
 router.post('/login', async (req, res) => {
   try {
