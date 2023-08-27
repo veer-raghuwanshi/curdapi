@@ -89,41 +89,48 @@ router.post('/register', async (req, res) => {
   
   
 
-  router.post('/login', async (req, res) => {
-    try {
-      const { identifier, password } = req.body;
-      console.log('Identifier:', identifier);
+  const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-      const user = await User.findOne({
-        $or: [{ email: identifier }, { mobile: identifier }],
-      });
-      console.log('User:', user);
+router.post('/login', async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+    console.log('Identifier:', identifier);
 
-      if (!user) {
-        console.log('User not found');
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { mobile: identifier }],
+    });
+    console.log('User:', user);
 
-        return res.status(401).json({ message: 'Authentication failed' });
-      }
-  
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      console.log('Password match:', passwordMatch);
-
-      if (!passwordMatch) {
-        console.log('Incorrect password');
-
-        return res.status(401).json({ message: 'Authentication failed: Incorrect credentials' });
-      }
-      const token = jwt.sign({ identifier, userId: user._id }, config.secretKey, { expiresIn: '1h' });
-      res.status(200).json({ email: user.email,password:user.password,token, message: 'Successfully logged in'});
-    } catch (error) {
-      console.error('Login error:', error);
-
-      res.status(500).json({ message: 'An error occurred' });
+    if (!user) {
+      console.log('User not found');
+      return res.status(401).json({ message: 'Authentication failed' });
     }
-  });
-  
 
-  
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match:', passwordMatch);
+
+    if (!passwordMatch) {
+      console.log('Incorrect password');
+      return res.status(401).json({ message: 'Authentication failed: Incorrect credentials' });
+    }
+
+    const token = jwt.sign({ identifier, userId: user._id }, config.secretKey, { expiresIn: '1h' });
+
+    // Set the token as an HttpOnly cookie in the response
+    res.cookie('token', token, {
+      httpOnly: true, // Prevent JavaScript access to the cookie
+      maxAge: 60 * 60 * 1000, // Cookie expiration time: 1 hour
+      path: '/', // Set the cookie for the root path
+    });
+
+    res.status(200).json({ email: user.email, password: user.password,token, message: 'Successfully logged in' });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+});
+
 
 
  
