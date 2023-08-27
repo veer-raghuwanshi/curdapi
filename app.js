@@ -18,11 +18,11 @@ app.use(
 
 
 let cors = require("cors");
-// app.use(cors());
-app.use(cors({
-  origin: 'http://localhost:3001',
-  credentials: true // Allow credentials
-}));
+app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:3001',
+//   credentials: true // Allow credentials
+// }));
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*'); // Allow requests from any origin
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
