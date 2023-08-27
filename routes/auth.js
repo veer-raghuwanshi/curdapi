@@ -117,12 +117,12 @@ router.post('/login', async (req, res) => {
     const token = jwt.sign({ identifier, userId: user._id }, config.secretKey, { expiresIn: '1h' });
 
     // Set the token as an HttpOnly cookie in the response
-    res.cookie('token', token, {
+    var cookie =  res.cookie('token', token, {
       httpOnly: true, // Prevent JavaScript access to the cookie
       maxAge: 60 * 60 * 1000, // Cookie expiration time: 1 hour
       path: '/', // Set the cookie for the root path
     });
-
+console.log("cookie",cookie)
     res.status(200).json({ email: user.email, password: user.password,token, message: 'Successfully logged in' });
   } catch (error) {
     console.error('Login error:', error);
