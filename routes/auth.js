@@ -122,7 +122,7 @@ router.post('/login', async (req, res) => {
       maxAge: 60 * 60 * 1000, // Cookie expiration time: 1 hour
       path: '/', // Set the cookie for the root path
     });
-console.log("cookie",cookie)
+//console.log("cookie",cookie)
     res.status(200).json({ email: user.email, password: user.password,token, message: 'Successfully logged in' });
   } catch (error) {
     console.error('Login error:', error);
