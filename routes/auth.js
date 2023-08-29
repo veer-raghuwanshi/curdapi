@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
 
     if (!user) {
       console.log('User not found');
-      return res.status(401).json({ message: 'Authentication failed' });
+      return res.status(401).json({isAuthenticated: false, message: 'Authentication failed' });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -111,7 +111,7 @@ router.post('/login', async (req, res) => {
 
     if (!passwordMatch) {
       console.log('Incorrect password');
-      return res.status(401).json({ message: 'Authentication failed: Incorrect credentials' });
+      return res.status(401).json({isAuthenticated: false, message: 'Authentication failed: Incorrect credentials' });
     }
 
     const token = jwt.sign({ identifier, userId: user._id }, config.secretKey, { expiresIn: '1h' });
@@ -123,10 +123,10 @@ router.post('/login', async (req, res) => {
       path: '/', // Set the cookie for the root path
     });
 //console.log("cookie",cookie)
-    res.status(200).json({ email: user.email, password: user.password,token, message: 'Successfully logged in' });
+    res.status(200).json({isAuthenticated: true, email: user.email, password: user.password,token, message: 'Successfully logged in' });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ message: 'An error occurred' });
+    res.status(500).json({isAuthenticated: false, message: 'An error occurred' });
   }
 });
 
